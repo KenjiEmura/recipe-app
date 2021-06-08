@@ -29,7 +29,8 @@ jobs:
 
       - name: Test with flake8
         run: |
-          cd backend && flake8
+          echo $PWD
+          pipenv run flake8
 
       # - name: Test with pytest
       #   env:
