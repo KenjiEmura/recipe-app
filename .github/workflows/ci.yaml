@@ -37,10 +37,10 @@ jobs:
           STEPS_CONTEXT: ${{ toJSON(steps) }}
         run: |
           echo "Steps context: $STEPS_CONTEXT"
-          echo "steps.cache-pipenv.outputs.cache-hit: ${{ steps.cache-pipenv.outputs.cache-hit }}"
+          echo "steps.cache-pipenv.outcome: ${{ steps.cache-pipenv.outcome }}"
 
       - name: Install dependencies
-        if: steps.cache-pipenv.outputs.cache-hit != 'success'
+        if: steps.cache-pipenv.outcome != 'success'
         run: |
           python -m pip install --upgrade pip
           pip install pipenv
