@@ -39,6 +39,7 @@ jobs:
           echo "Steps context: $STEPS_CONTEXT"
           echo "steps.cache-pipenv.outcome: ${{ steps.cache-pipenv.outcome }}"
           echo $GITHUB_WORKSPACE
+          ls
 
       - name: Install dependencies
         if: steps.cache-pipenv.outcome != 'success'
