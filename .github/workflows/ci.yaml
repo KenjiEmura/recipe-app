@@ -35,6 +35,11 @@ jobs:
           pip install pipenv
           cd backend && pipenv sync --dev
 
+      - name: Django tests
+        run: |
+          echo "The PWD is: $PWD"
+          cd backend/app && pipenv run python manage.py test
+
       - name: Test with flake8
         run: |
           echo $PWD
