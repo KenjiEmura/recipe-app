@@ -38,6 +38,7 @@ jobs:
         run: |
           echo "Steps context: $STEPS_CONTEXT"
           echo "steps.cache-pipenv.outcome: ${{ steps.cache-pipenv.outcome }}"
+          echo $GITHUB_WORKSPACE
 
       - name: Install dependencies
         if: steps.cache-pipenv.outcome != 'success'
@@ -49,7 +50,7 @@ jobs:
       - name: Django tests
         run: |
           echo "The PWD is: $PWD"
-          cd backend/app && pipenv run python manage.py test
+          cd backend && pipenv run python manage.py test
 
       - name: Test with flake8
         run: |
