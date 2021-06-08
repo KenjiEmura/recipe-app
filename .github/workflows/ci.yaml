@@ -50,7 +50,7 @@ jobs:
       - name: Django tests
         run: |
           echo "The PWD is: $PWD"
-          cd backend && pipenv run python manage.py test
+          cd backend/app && pipenv run python manage.py test
 
       - name: Test with flake8
         run: |
