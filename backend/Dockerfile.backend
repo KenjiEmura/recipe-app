@@ -1,0 +1,16 @@
+FROM python:3.9-alpine
+
+LABEL Author="KenjiEmura"
+
+# Setting PYTHONUNBUFFERED to a non empty value ensures that the python output is sent straight to terminal (e.g. your container log) without being first buffered and that you can see the output of your application (e.g. django logs) in real time.
+ENV PYTHONUNBUFFERED 1
+
+RUN pip install --upgrade pip && pip install pipenv
+
+COPY . /app
+WORKDIR /app
+
+RUN pipenv install --ignore-pipfile --deploy --system
+
+RUN adduser -D user
+USER user
