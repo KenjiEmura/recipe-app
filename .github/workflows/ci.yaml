@@ -1,0 +1,64 @@
+name: test
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+  repository_dispatch:
+    types: [run_workflow]
+
+jobs:
+  backend-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2.2.2
+        with:
+          python-version: 3.9
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pipenv
+          cd backend && pipenv sync --dev
+
+      - name: Test with flake8
+        run: |
+          flake8
+
+      # - name: Test with pytest
+      #   env:
+      #     DEBUG: True
+      #     CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      #     LOCAL_DEVELOPMENT: True
+      #     TIME_ZONE: 'Asia/Tokyo'
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     AWS_REGION_NAME: ${{ secrets.AWS_REGION_NAME }}
+      #     AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+      #     AWS_SES_CONFIGURATION_SET_NAME: ${{ secrets.AWS_SES_CONFIGURATION_SET_NAME }}
+      #   run: |
+      #     pipenv run pytest
+      #   working-directory: ./backend
+
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v1
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     files: backend/coverage.xml
+
+      # - name: Notify slack
+      #   uses: 8398a7/action-slack@v3.9.1
+      #   with:
+      #     status: ${{ job.status }}
+      #     icon_emoji: ':github-actions:'
+      #     fields: repo,message,commit,author,action,job,took,eventName,ref,workflow # 追加
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #   if: always()
