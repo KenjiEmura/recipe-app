@@ -1,11 +1,11 @@
 name: test
 
 on:
-  # push:
-  #   branches:
-  #     - master
-  #     - develop
-  # pull_request:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
   repository_dispatch:
     types: [run_workflow]
 
