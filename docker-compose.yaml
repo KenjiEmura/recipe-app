@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   app:
-    container_name: backend
+    container_name: recipe-app-backend
     build:
       context: backend
       dockerfile: Dockerfile.backend
@@ -12,4 +12,22 @@ services:
       - "8000:8000"
     volumes:
       - ./backend/app:/app
-    command: sh -c "python manage.py runserver 0.0.0.0:8000"
+    command: sh -c "python manage.py wait_for_db &&
+                    python manage.py migrate &&
+                    python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DB_HOST=db # This has to be equal to the name of the service that runs the db
+      - DB_NAME=app # Same as POSTGRES_DB
+      - DB_USER=postgres # Same as POSTGRES_USER
+      - DB_PASS=supersecretpassword # Same as POSTGRES_PASSWORD
+    depends_on:
+      - db
+
+  db:
+    container_name: recipe-app-postgres
+    image: postgres:12-alpine
+    environment:
+      - POSTGRES_DB=app
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=supersecretpassword
+

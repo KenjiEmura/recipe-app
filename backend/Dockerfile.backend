@@ -1,16 +1,17 @@
-FROM python:3.9-alpine
+FROM python:3.9
 
 LABEL Author="KenjiEmura"
 
 # Setting PYTHONUNBUFFERED to a non empty value ensures that the python output is sent straight to terminal (e.g. your container log) without being first buffered and that you can see the output of your application (e.g. django logs) in real time.
 ENV PYTHONUNBUFFERED 1
 
+# This will allow 'psycopg2-binary' to run, make sure that you use 'python:3.9', not the alpine version
+RUN apt-get update
+
 RUN pip install --upgrade pip && pip install pipenv
 
+# I decided to copy all the files because there we have the .flake8 configuration file.
 COPY . .
 WORKDIR /app
 
 RUN pipenv install --ignore-pipfile --deploy --system
-
-RUN adduser -D user
-USER user
